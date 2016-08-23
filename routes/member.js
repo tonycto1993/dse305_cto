@@ -4,34 +4,13 @@ var router = express.Router();
 //var mongoose = require('mongoose');
 //var member = require('../models/member.js');
 var mongoose = require('../models/db.js');
-/*
-var mongoose = require("mongoose");
-
-mongoose.connect('mongodb://collection:45830027@ds023664.mlab.com:23664/sampledb305cde2016', function(err) {
-     if(err) {
-         console.log('connection error', err);
-     } else {
-         console.log('connection successful');
-     }
- });
- */
- 
-var MemberSchema = new mongoose.Schema({
-   user_name: String,
-   password: String,
-   name: String,
-   email: String,
-   status: Boolean,
-   create_at: {type: Date, default: Date.now()},
-});
-
-var member = mongoose.model('Member', MemberSchema);
+var member = require('../models/member.js');
 
 
 router.get('/', function(req,res,next){
-    console.log("tttt");
-
+    console.log("view");
 });
+
 
 
 function validateEmail(email) {
@@ -41,6 +20,7 @@ function validateEmail(email) {
 
 router.post('/register', function(req,res,next){
     var error = 0;
+    var msg;
     var user_name = req.body.user_name;
     var password = req.body.password;
     var name = req.body.name;
@@ -71,33 +51,45 @@ router.post('/register', function(req,res,next){
         error = 4;
         return false;
     }
-    console.log('data no error');
+    //console.log('data no error');
     member.find({user_name: user_name}, function(err, data){
-        if(err)
+        if(err){
             console.log("error : "+err);
-        else{ 
+            msg = 'can not find memeber';
+        }else{ 
             //console.log("no error : ");
             if(Object.keys(data).length === 0){
                 console.log('no data');
+                //member.register(user_name, password, name, email);
+                
                 member.create({
-                user_name: user_name,
-                password: password,
-                name: name,
-                email: email,
-                status: false,
-            },function(err, todo){
-                if(err)
-                    console.log(err);
-                else 
-                    console.log(todo);
-            });
+                    user_name: user_name,
+                    password: password,
+                    name: name,
+                    email: email,
+                    status: false,
+                },function(err, todo){
+                    
+                    if(err){
+                        console.log(err);
+                        msg = 'can not register memeber';
+                    }else{
+                        console.log(todo);
+                        msg = 'register memeber successful';
+                    }   
+                });
             }else{
-                console.log('have data');
+                console.log('member have data');
                 error = 5;
-                return false;
+                msg = 'member have data';
+                //return false;
             }
         }
+        res.setHeader('content-type', 'application/json')
+        res.send(res.statusCode, {status: data.status, message: msg})
+        res.end()
     });
+    
     
 });
 
@@ -105,25 +97,85 @@ var callback = function(err, data){
     if(err) 
       return console.log(err)
     else 
-     console.log(data);
+      console.log('login ok');
+      
+    
 };
 
 router.post('/login', function(req,res,next){
     var user_name = req.body.user_name;
     var password = req.body.password;
-    member.find({user_name: user_name, password: password}, callback);
+    var msg;
+    //console.log('username : ' + user_name + ", password : "+password);
+    member.find({user_name: user_name},{password : password}, function(err, data){
+        if(err) 
+           console.log(err)
+        else 
+           console.log('login ok');
+        //console.log(data);
+       if(data == [] || data == null || data == ''){
+           msg = "cannot found member";
+       }else{
+           msg = "member login successful";
+       }
+       res.setHeader('content-type', 'application/json')
+       res.status(res.statusCode).send({status: 1, message: msg})
+       res.end()
+    });
+    
+
 });
 
 router.post('/changePassword', function(req,res,next){
     var user_name = req.body.user_name;
     var password = req.body.password;
-    var news_password = req.body.news_password;
-    member.update({user_name: user_name, password: password}, {password: news_password}, {multi: false}, function(err, raw, numberAffected){
-    if(err)
-        return 
+    var new_password = req.body.new_password;
+    var msg;
+    if(password == '' || password == null || password.length < 6){
+        console.log("password has problem.");
+        msg = 'password should more than 5 characters';
+    }else{
+        //member.update({user_name: user_name, password: password}, {password: news_password}, {multi: false}, function(err, data, numberAffected){
+        member.update({user_name: user_name, password: password}, {password: new_password}, function(err, data, numberAffected){
+        if(err) 
             console.error(err);
-        console.log("The raw response from Mongo was", raw);
+        else
+            console.log("The raw response from Mongo was", data);
+        
+        
+        if(data.nModified > 0){
+            msg = "change password successful";
+        }else{
+            msg = "change password failed";
+        }     
+            
+        res.setHeader('content-type', 'application/json')
+        res.status(res.statusCode).send({status: data.status, message: msg})
+        res.end()
+        });
+    }
+});
+
+router.post('/verifyMember', function(req,res,next){
+    var user_name = req.body.user_name;
+    var msg;
+    //member.update({user_name: user_name, password: password}, {password: news_password}, {multi: false}, function(err, data, numberAffected){
+    member.update({user_name: user_name}, {status: true}, function(err, data, numberAffected){
+    if(err) 
+        console.error(err);
+    else
+        console.log("The raw response from Mongo was", data);
     
+    
+    if(data.nModified > 0){
+        msg = "verify member successful";
+    }else{
+        msg = "verify member failed";
+    }     
+        
+    res.setHeader('content-type', 'application/json')
+    res.status(res.statusCode).send({status: data.status, message: msg})
+    res.end()
     });
 });
 

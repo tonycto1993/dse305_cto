@@ -1,4 +1,4 @@
-
+/*
 var mongoose = require("mongoose");
 
 mongoose.connect('mongodb://collection:45830027@ds023664.mlab.com:23664/sampledb305cde2016', function(err) {
@@ -8,7 +8,9 @@ mongoose.connect('mongodb://collection:45830027@ds023664.mlab.com:23664/sampledb
          console.log('connection successful');
      }
  });
+ */
  
+ var mongoose = require('../models/db.js');
 
 var FavouriteSchema = new mongoose.Schema({
    volume_id: String,
@@ -19,3 +21,4 @@ var FavouriteSchema = new mongoose.Schema({
 
 var Favourite = mongoose.model('Favourite', FavouriteSchema);
 
+module.exports = Favourite;

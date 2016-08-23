@@ -12,9 +12,13 @@ frisby.globalSetup({
 frisby.create('add a new member')
   .post('http://localhost:8081/searchBooksByKeyword', {"keyword": "harry proter"}, {json: true})
   .expectStatus(200)
+  .expectStatus(200)
+  .expectHeaderContains('content-type', 'application/json')
   .toss()
   
 frisby.create('add a new member')
   .post('http://localhost:8081/searchBookByVolumeID', {"volumeID": "_ojXNuzgHRcC"}, {json: true})
   .expectStatus(200)
+  .expectStatus(200)
+  .expectHeaderContains('content-type', 'application/json')
   .toss()

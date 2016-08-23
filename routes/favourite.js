@@ -4,28 +4,10 @@ var router = express.Router();
 //var mongoose = require('mongoose');
 //var member = require('../models/member.js');
 var mongoose = require('../models/db.js');
-/*
-var mongoose = require("mongoose");
-
-mongoose.connect('mongodb://collection:45830027@ds023664.mlab.com:23664/sampledb305cde2016', function(err) {
-     if(err) {
-         console.log('connection error', err);
-     } else {
-         console.log('connection successful');
-     }
- });
- */
-var FavouriteSchema = new mongoose.Schema({
-   volume_id: String,
-   user_name: String,
-   notes: String,
-   create_at: {type: Date, default: Date.now()},
-});
-
-var Favourite = mongoose.model('Favourite', FavouriteSchema);
+var Favourite = require('../models/favourite.js');
 
 router.get('/', function(req,res,next){
-    console.log("tttt");
+    //console.log("tttt");
 
 });
 
@@ -40,21 +22,58 @@ router.post('/addToFavouriteList', function(req,res,next){
     var user_name = req.body.user_name;
     var volume_id = req.body.volume_id;
     var notes = req.body.notes;
-    Favourite.create({
-        volume_id: volume_id,
-        user_name: user_name,
-        notes: notes,
-    },function(err, todo){
-        if(err)
-            console.log(err);
-        else 
-            console.log(todo);
+    var msg = 'start add to fovourite list';
+    
+    Favourite.find({user_name: user_name}, function(err, data){
+        if(err){
+            console.log("error : "+err);
+            msg = 'can not found member';
+        }else{ 
+            if(Object.keys(data).length === 0){
+                Favourite.create({
+                    volume_id: volume_id,
+                    user_name: user_name,
+                    notes: notes,
+                },function(err, todo){
+                    if(err){
+                        console.log(err);
+                        msg = 'can not insert to favourite list';
+                    }else{
+                        //console.log(todo);
+                        msg = 'insert to favourite list successful';
+                    }
+                });
+            }else{
+                console.log('favourite have data');
+                msg = 'favourite exsiting record';
+            //    return false;
+            }
+        }
+        res.setHeader('content-type', 'application/json')
+        res.status(res.statusCode).send({status: data.status, message: msg})
+        res.end()
     });
+ 
 });
 
 router.post('/getFavouriteList', function(req,res,next){
     var user_name = req.body.user_name;
-    Favourite.find({user_name: user_name}, callback);
+    var msg;
+    Favourite.find({user_name: user_name}, function(err, data){
+        if(err){ 
+           console.log(err)
+           msg = 'cannot found favourite list';
+        }
+       console.log(data);
+       if(data == [] || data == null || data == ''){
+           msg = "no data in favourite list";
+       }else{
+           msg = "favourite list found successful";
+       }
+       res.setHeader('content-type', 'application/json')
+       res.status(res.statusCode).send({status: 1, message: msg})
+       res.end()
+    });
 
 });
 
@@ -62,25 +81,46 @@ router.post('/addNotes', function(req,res,next){
     var user_name = req.body.user_name;
     var volume_id = req.body.volume_id;
     var notes = req.body.notes;
-    Favourite.update({user_name: user_name, volume_id: volume_id}, {notes: notes}, {multi: false}, function(err, raw, numberAffected){
-    if(err)
-        return 
+    var msg;
+    Favourite.update({user_name: user_name, volume_id: volume_id}, {notes: notes}, {multi: false}, function(err, data, numberAffected){
+        if(err){
             console.error(err);
-        
-        console.log("The raw response from Mongo was", raw);
+            msg = 'cannot found favourite list record';
+        }else{   
+            console.log("The raw response from Mongo was", data);
+            if(data.nModified > 0){
+                msg = 'add notes to favourite list successful';
+            }else{
+                msg = 'add notes to favourite list failed';
+            }
+        }
+        res.setHeader('content-type', 'application/json')
+        res.status(res.statusCode).send({status: 1, message: msg})
+        res.end()
     
     });
-
 });
+
 
 router.post('/removeFavourite', function(req,res,next){
     var user_name = req.body.user_name;
     var volume_id = req.body.volume_id;
-    Favourite.remove({user_name: user_name, volume_id: volume_id}, {multi: false}, function(err, raw, numberAffected){
-    if(err)
-        return 
+    var msg;
+    Favourite.remove({user_name: user_name, volume_id: volume_id}, {multi: false}, function(err, data, numberAffected){
+        if(err){
             console.error(err);
-        console.log("The raw response from Mongo was", raw);
+            msg = 'cannot found favourite list record';
+        }else{
+            console.log("removeFavourite from Mongo was", data);
+            if(data.nModified > 0){
+                msg = 'remove favourite list successful';
+            }else{
+                msg = 'remove from favourite list failed';
+            }
+        }
+        res.setHeader('content-type', 'application/json')
+        res.status(res.statusCode).send({status: 1, message: msg})
+        res.end()
     
     });
 });
