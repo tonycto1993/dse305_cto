@@ -87,7 +87,7 @@ router.post('/addNotes', function(req,res,next){
             console.error(err);
             msg = 'cannot found favourite list record';
         }else{   
-            console.log("The raw response from Mongo was", data);
+            console.log("add notes from Mongo was", data);
             if(data.nModified > 0){
                 msg = 'add notes to favourite list successful';
             }else{
@@ -103,6 +103,7 @@ router.post('/addNotes', function(req,res,next){
 
 
 router.post('/removeFavourite', function(req,res,next){
+    console.log('--remove from favourite--');
     var user_name = req.body.user_name;
     var volume_id = req.body.volume_id;
     var msg;
@@ -111,7 +112,7 @@ router.post('/removeFavourite', function(req,res,next){
             console.error(err);
             msg = 'cannot found favourite list record';
         }else{
-            console.log("removeFavourite from Mongo was", data);
+            //console.log("removeFavourite from Mongo was", data);
             if(data.nModified > 0){
                 msg = 'remove favourite list successful';
             }else{

@@ -150,7 +150,7 @@ router.post('/changePassword', function(req,res,next){
         }     
             
         res.setHeader('content-type', 'application/json')
-        res.status(res.statusCode).send({status: data.status, message: msg})
+        res.status(res.statusCode).send({status: 1, message: msg})
         res.end()
         });
     }
@@ -174,7 +174,7 @@ router.post('/verifyMember', function(req,res,next){
     }     
         
     res.setHeader('content-type', 'application/json')
-    res.status(res.statusCode).send({status: data.status, message: msg})
+    res.status(res.statusCode).send({status: 1, message: msg})
     res.end()
     });
 });
