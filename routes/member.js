@@ -18,6 +18,7 @@ function validateEmail(email) {
   return re.test(email);
 }
 
+/**register the member**/
 router.post('/register', function(req,res,next){
     console.log('--member register--');
     var error = 0;
@@ -27,33 +28,32 @@ router.post('/register', function(req,res,next){
     var name = req.body.name;
     var email = req.body.email;
     //console.log(req);
-    if(user_name == '' || user_name == null || user_name.length < 1){
+    if(user_name == '' || user_name == null || user_name.length < 1){// check user_name format
         console.log("User name has problem.");
         error = 1;
         return false;
     }
     
-    if(password == '' || password == null || password.length < 6){
+    if(password == '' || password == null || password.length < 6){//check password length should more than 5 characters
         console.log("password has problem.");
         error = 2;
         return false;
     }
     
-    if(name == '' || name == null || name.length < 3){
+    if(name == '' || name == null || name.length < 3){//check name length should be more than 3 characters
         console.log("name has problem.");
         error = 3;
         return false;
     }
 
     
-    if(email == '' || email == null || !validateEmail(email)){
-            
+    if(email == '' || email == null || !validateEmail(email)){//check the vaild email format
         console.log("email has problem.");
         error = 4;
         return false;
     }
     //console.log('data no error');
-    member.find({user_name: user_name}, function(err, data){
+    member.find({user_name: user_name}, function(err, data){//find the existing member
         if(err){
             console.log("error : "+err);
             msg = 'can not find memeber';
@@ -61,8 +61,7 @@ router.post('/register', function(req,res,next){
             //console.log("no error : ");
             if(Object.keys(data).length === 0){
                 console.log('no data');
-                //member.register(user_name, password, name, email);
-                
+                /**create member**/
                 member.create({
                     user_name: user_name,
                     password: password,
@@ -103,13 +102,14 @@ var callback = function(err, data){
     
 };
 
+/**member login**/
 router.post('/login', function(req,res,next){
     console.log('--login member--');
     var user_name = req.body.user_name;
     var password = req.body.password;
     var msg;
     //console.log('username : ' + user_name + ", password : "+password);
-    member.find({user_name: user_name},{password : password}, function(err, data){
+    member.find({user_name: user_name},{password : password}, function(err, data){//find the member
         if(err) 
            console.log(err)
         else 
@@ -127,7 +127,7 @@ router.post('/login', function(req,res,next){
     
 
 });
-
+/**change password**/
 router.post('/changePassword', function(req,res,next){
     console.log('--change password--');
     var user_name = req.body.user_name;
@@ -139,6 +139,7 @@ router.post('/changePassword', function(req,res,next){
         msg = 'password should more than 5 characters';
     }else{
         //member.update({user_name: user_name, password: password}, {password: news_password}, {multi: false}, function(err, data, numberAffected){
+        /**update member password**/
         member.update({user_name: user_name, password: password}, {password: new_password}, function(err, data, numberAffected){
         if(err) 
             console.error(err);
@@ -159,17 +160,18 @@ router.post('/changePassword', function(req,res,next){
     }
 });
 
+/**verify member**/
 router.post('/verifyMember', function(req,res,next){
     console.log('--verify member--');
     var user_name = req.body.user_name;
     var msg;
     //member.update({user_name: user_name, password: password}, {password: news_password}, {multi: false}, function(err, data, numberAffected){
+    /**update member status**/
     member.update({user_name: user_name}, {status: true}, function(err, data, numberAffected){
     if(err) 
         console.error(err);
     else
         console.log("The raw response from Mongo was", data);
-    
     
     if(data.nModified > 0){
         msg = "verify member successful";

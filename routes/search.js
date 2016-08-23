@@ -6,6 +6,7 @@ router.get('/', function(req,res,next){
     console.log("tttt");
 });
 
+/**search book by keyword**/
 router.post('/searchBooksByKeyword', function(req,res,next){
     console.log('--search book by keyword--');
     var keyword = req.body.keyword;
@@ -15,6 +16,7 @@ router.post('/searchBooksByKeyword', function(req,res,next){
         msg = 'keyword should be has content';
         //return false;
     }else{
+        /**get book detail from google api by keyword**/
         var url = 'https://www.googleapis.com/books/v1/volumes?q='+keyword+'&orderBy=newest&maxResults=1&filter=free-ebooks';
         https.get(url, function(res){
             var body = '';
@@ -46,6 +48,7 @@ router.post('/searchBooksByKeyword', function(req,res,next){
     
 });
 
+/**search book by volume id**/
 router.post('/searchBookByVolumeID', function(req,res,next){
     console.log('--search book by volume id--');
     var volumeID = req.body.volumeID;
@@ -54,7 +57,8 @@ router.post('/searchBookByVolumeID', function(req,res,next){
         console.log("volumeID should be has content.");
         msg = "volumeID should be has content";
     }else{
-        var url = 'https://www.googleapis.com/books/v1/volumes/'+volumeID;//_ojXNuzgHRcC
+        /**get book detail from google api by volume id**/
+        var url = 'https://www.googleapis.com/books/v1/volumes/'+volumeID;//1ebwAAAAMAAJ
         var https = require('https');
         //var http = require('http');
         https.get(url, function(res){

@@ -1,3 +1,4 @@
+/**auto testing from member module**/
 var member = require("../models/member");
 var frisby = require('frisby')
 

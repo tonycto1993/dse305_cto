@@ -16,7 +16,7 @@ frisby.create('add a new member')
   .toss()
   
 frisby.create('add a new member')
-  .post('http://localhost:8081/searchBookByVolumeID', {"volumeID": "_ojXNuzgHRcC"}, {json: true})
+  .post('http://localhost:8081/searchBookByVolumeID', {"volumeID": "1ebwAAAAMAAJ"}, {json: true})
   .expectStatus(200)
   .expectHeaderContains('content-type', 'application/json')
   .toss()

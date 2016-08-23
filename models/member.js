@@ -1,3 +1,4 @@
+/**create connection to mongoose**/
 var mongoose = require('../models/db.js');
 var MemberSchema = new mongoose.Schema({
    user_name: String,
@@ -7,9 +8,7 @@ var MemberSchema = new mongoose.Schema({
    status: Boolean,
    create_at: {type: Date, default: Date.now()},
 });
-
+/**create member schema**/
 var member = mongoose.model('Member', MemberSchema);
-
-var register;
 
 module.exports = member;

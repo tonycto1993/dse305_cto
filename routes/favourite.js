@@ -1,3 +1,4 @@
+/**require library**/
 var express = require('express');
 var router = express.Router();
 
@@ -8,7 +9,6 @@ var Favourite = require('../models/favourite.js');
 
 router.get('/', function(req,res,next){
     //console.log("tttt");
-
 });
 
 var callback = function(err, data){
@@ -18,6 +18,7 @@ var callback = function(err, data){
      console.log(data);
 };
 
+/**add book to favourite list**/
 router.post('/addToFavouriteList', function(req,res,next){
     console.log('--add book to favourite--');
     var user_name = req.body.user_name;
@@ -25,12 +26,13 @@ router.post('/addToFavouriteList', function(req,res,next){
     var notes = req.body.notes;
     var msg = 'start add to fovourite list';
     
-    Favourite.find({user_name: user_name}, function(err, data){
+    Favourite.find({user_name: user_name}, function(err, data){//find the favoruite
         if(err){
             console.log("error : "+err);
             msg = 'can not found member';
         }else{ 
             if(Object.keys(data).length === 0){
+                /**create the favourite**/
                 Favourite.create({
                     volume_id: volume_id,
                     user_name: user_name,
@@ -45,28 +47,28 @@ router.post('/addToFavouriteList', function(req,res,next){
                     }
                 });
             }else{
-                console.log('favourite have data');
+                //console.log('favourite have data');
                 msg = 'favourite exsiting record';
-            //    return false;
+                //return false;
             }
         }
         res.setHeader('content-type', 'application/json')
         res.status(res.statusCode).send({status: data.status, message: msg, data: data})
         res.end()
     });
- 
 });
 
+/**get the favourite from list**/
 router.post('/getFavouriteList', function(req,res,next){
     console.log('--get list from favourite--');
     var user_name = req.body.user_name;
     var msg;
-    Favourite.find({user_name: user_name}, function(err, data){
+    Favourite.find({user_name: user_name}, function(err, data){//find the favoruite
         if(err){ 
            console.log(err)
            msg = 'cannot found favourite list';
         }
-       console.log(data);
+       //console.log(data);
        if(data == [] || data == null || data == ''){
            msg = "no data in favourite list";
        }else{
@@ -76,15 +78,16 @@ router.post('/getFavouriteList', function(req,res,next){
        res.status(res.statusCode).send({status: 1, message: msg, data: data})
        res.end()
     });
-
 });
 
+/**cadd notes to favourite**/
 router.post('/addNotes', function(req,res,next){
     console.log('--add notes to favourite--');
     var user_name = req.body.user_name;
     var volume_id = req.body.volume_id;
     var notes = req.body.notes;
     var msg;
+    /**update notes to favourite**/
     Favourite.update({user_name: user_name, volume_id: volume_id}, {notes: notes}, {multi: false}, function(err, data, numberAffected){
         if(err){
             console.error(err);
@@ -129,11 +132,15 @@ router.post('/removeFavourite', function(req,res,next){
     });
 });
 */
+
+/**remove favourite**/
 router.post('/removeFavourite', function(req,res,next){
     console.log('--remove from favourite--');
     var user_name = req.body.user_name;
     var volume_id = req.body.volume_id;
     var msg;
+    
+    /**update the favourite for remove**/
     Favourite.update({user_name: user_name, volume_id: volume_id}, {multi: false}, function(err, data, numberAffected){
         if(err){
             console.error(err);

@@ -1,5 +1,5 @@
  //require("script/function.js");
- 
+ /**require the library**/
  var express = require('express');
  var path = require('path');
  var favicon = require('serve-favicon');
@@ -10,9 +10,6 @@
  var nodemailer = require("nodemailer");
  var smtpTransport = require("nodemailer-smtp-transport");
  
- 
- //var routes = require('./routes/index');
- //var todos = require('./routes/todos');
  var member = require('./routes/member');
  var search = require('./routes/search');
  var favourite = require('./routes/favourite');
@@ -32,13 +29,12 @@
  app.use(cookieParser());
  app.use(express.static(path.join(__dirname, '../public')));
  
- //app.use('/', routes);
- //app.use('/todos', todos);
-
+ 
+ /**use to the controller**/
  app.use('/', member);
  app.use('/register', member);
  app.use('/login', member);
- //app.use('/changePassword', member);
+ app.use('/changePassword', member);
  
  
  app.use('/', search);
@@ -55,7 +51,7 @@
  
  
  // catch 404 and forward to error handler
- 
+
  app.use(function(req, res, next) {
      var err = new Error('Not Found');
      err.status = 404;

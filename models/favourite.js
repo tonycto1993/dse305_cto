@@ -1,3 +1,4 @@
+/**connect to the mongoose db**/
 var mongoose = require('../models/db.js');
 
 var FavouriteSchema = new mongoose.Schema({

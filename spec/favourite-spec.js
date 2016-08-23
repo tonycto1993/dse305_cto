@@ -1,3 +1,4 @@
+/**testing the favourite module**/
 var favourite = require("../models/favourite");
 var frisby = require('frisby')
 
