@@ -7,6 +7,7 @@ router.get('/', function(req,res,next){
 });
 
 router.post('/searchBooksByKeyword', function(req,res,next){
+    console.log('--search book by keyword--');
     var keyword = req.body.keyword;
     var msg = 'start search book by keyword';
     if(keyword == null || keyword == '' || keyword.length < 1){
@@ -46,6 +47,7 @@ router.post('/searchBooksByKeyword', function(req,res,next){
 });
 
 router.post('/searchBookByVolumeID', function(req,res,next){
+    console.log('--search book by volume id--');
     var volumeID = req.body.volumeID;
     var msg = 'start search book by volume id';
     if(volumeID == null || volumeID == '' || volumeID.length < 1){

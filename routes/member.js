@@ -19,6 +19,7 @@ function validateEmail(email) {
 }
 
 router.post('/register', function(req,res,next){
+    console.log('--member register--');
     var error = 0;
     var msg;
     var user_name = req.body.user_name;
@@ -86,7 +87,7 @@ router.post('/register', function(req,res,next){
             }
         }
         res.setHeader('content-type', 'application/json')
-        res.send(res.statusCode, {status: data.status, message: msg})
+        res.send(res.statusCode, {status: data.status, message: msg, data: data})
         res.end()
     });
     
@@ -103,6 +104,7 @@ var callback = function(err, data){
 };
 
 router.post('/login', function(req,res,next){
+    console.log('--login member--');
     var user_name = req.body.user_name;
     var password = req.body.password;
     var msg;
@@ -119,7 +121,7 @@ router.post('/login', function(req,res,next){
            msg = "member login successful";
        }
        res.setHeader('content-type', 'application/json')
-       res.status(res.statusCode).send({status: 1, message: msg})
+       res.status(res.statusCode).send({status: 1, message: msg, data: data})
        res.end()
     });
     
@@ -127,6 +129,7 @@ router.post('/login', function(req,res,next){
 });
 
 router.post('/changePassword', function(req,res,next){
+    console.log('--change password--');
     var user_name = req.body.user_name;
     var password = req.body.password;
     var new_password = req.body.new_password;
@@ -150,13 +153,14 @@ router.post('/changePassword', function(req,res,next){
         }     
             
         res.setHeader('content-type', 'application/json')
-        res.status(res.statusCode).send({status: 1, message: msg})
+        res.status(res.statusCode).send({status: 1, message: msg, data: data})
         res.end()
         });
     }
 });
 
 router.post('/verifyMember', function(req,res,next){
+    console.log('--verify member--');
     var user_name = req.body.user_name;
     var msg;
     //member.update({user_name: user_name, password: password}, {password: news_password}, {multi: false}, function(err, data, numberAffected){
@@ -174,7 +178,7 @@ router.post('/verifyMember', function(req,res,next){
     }     
         
     res.setHeader('content-type', 'application/json')
-    res.status(res.statusCode).send({status: 1, message: msg})
+    res.status(res.statusCode).send({status: 1, message: msg, data: data})
     res.end()
     });
 });

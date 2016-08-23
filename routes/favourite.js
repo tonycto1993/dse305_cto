@@ -19,6 +19,7 @@ var callback = function(err, data){
 };
 
 router.post('/addToFavouriteList', function(req,res,next){
+    console.log('--add book to favourite--');
     var user_name = req.body.user_name;
     var volume_id = req.body.volume_id;
     var notes = req.body.notes;
@@ -50,13 +51,14 @@ router.post('/addToFavouriteList', function(req,res,next){
             }
         }
         res.setHeader('content-type', 'application/json')
-        res.status(res.statusCode).send({status: data.status, message: msg})
+        res.status(res.statusCode).send({status: data.status, message: msg, data: data})
         res.end()
     });
  
 });
 
 router.post('/getFavouriteList', function(req,res,next){
+    console.log('--get list from favourite--');
     var user_name = req.body.user_name;
     var msg;
     Favourite.find({user_name: user_name}, function(err, data){
@@ -71,13 +73,14 @@ router.post('/getFavouriteList', function(req,res,next){
            msg = "favourite list found successful";
        }
        res.setHeader('content-type', 'application/json')
-       res.status(res.statusCode).send({status: 1, message: msg})
+       res.status(res.statusCode).send({status: 1, message: msg, data: data})
        res.end()
     });
 
 });
 
 router.post('/addNotes', function(req,res,next){
+    console.log('--add notes to favourite--');
     var user_name = req.body.user_name;
     var volume_id = req.body.volume_id;
     var notes = req.body.notes;
@@ -95,13 +98,13 @@ router.post('/addNotes', function(req,res,next){
             }
         }
         res.setHeader('content-type', 'application/json')
-        res.status(res.statusCode).send({status: 1, message: msg})
+        res.status(res.statusCode).send({status: 1, message: msg, data: data})
         res.end()
     
     });
 });
 
-
+/*
 router.post('/removeFavourite', function(req,res,next){
     console.log('--remove from favourite--');
     var user_name = req.body.user_name;
@@ -120,7 +123,31 @@ router.post('/removeFavourite', function(req,res,next){
             }
         }
         res.setHeader('content-type', 'application/json')
-        res.status(res.statusCode).send({status: 1, message: msg})
+        res.status(res.statusCode).send({status: 1, message: msg, data: data})
+        res.end()
+    
+    });
+});
+*/
+router.post('/removeFavourite', function(req,res,next){
+    console.log('--remove from favourite--');
+    var user_name = req.body.user_name;
+    var volume_id = req.body.volume_id;
+    var msg;
+    Favourite.update({user_name: user_name, volume_id: volume_id}, {multi: false}, function(err, data, numberAffected){
+        if(err){
+            console.error(err);
+            msg = 'cannot found favourite list record';
+        }else{   
+            console.log("add notes from Mongo was", data);
+            if(data.nModified > 0){
+                msg = 'remove favourite list successful';
+            }else{
+                msg = 'remove from favourite list failed';
+            }
+        }
+        res.setHeader('content-type', 'application/json')
+        res.status(res.statusCode).send({status: 1, message: msg, data: data})
         res.end()
     
     });
