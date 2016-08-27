@@ -19,6 +19,12 @@ function validateEmail(email) {
 }
 
 /**register the member**/
+router.get('/test', function(req,res,next){
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    console.log("User name = ");
+     res.end("yes");
+});
+
 router.post('/register', function(req,res,next){
     console.log('--member register--');
     var error = 0;
@@ -31,26 +37,26 @@ router.post('/register', function(req,res,next){
     if(user_name == '' || user_name == null || user_name.length < 1){// check user_name format
         console.log("User name has problem.");
         error = 1;
-        return false;
+        msg = 1;
     }
     
     if(password == '' || password == null || password.length < 6){//check password length should more than 5 characters
         console.log("password has problem.");
         error = 2;
-        return false;
+        msg = 2;
     }
     
     if(name == '' || name == null || name.length < 3){//check name length should be more than 3 characters
         console.log("name has problem.");
         error = 3;
-        return false;
+        msg = 3;
     }
 
     
     if(email == '' || email == null || !validateEmail(email)){//check the vaild email format
         console.log("email has problem.");
         error = 4;
-        return false;
+        msg = 4
     }
     //console.log('data no error');
     member.find({user_name: user_name}, function(err, data){//find the existing member
@@ -85,6 +91,7 @@ router.post('/register', function(req,res,next){
                 //return false;
             }
         }
+        res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('content-type', 'application/json')
         res.send(res.statusCode, {status: data.status, message: msg, data: data})
         res.end()

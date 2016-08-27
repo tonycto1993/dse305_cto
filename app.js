@@ -9,13 +9,28 @@
  var https = require('https');
  var nodemailer = require("nodemailer");
  var smtpTransport = require("nodemailer-smtp-transport");
+ var http           = require( 'http' );
  
  var member = require('./routes/member');
  var search = require('./routes/search');
  var favourite = require('./routes/favourite');
  
+var cors = require('cors');
 
- var app = express();
+
+var app = express();
+
+//CORS middleware
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+//express
+    next();
+}
+app.use(allowCrossDomain);
+app.use(cors());
+
  
  // view engine setup
  app.set('views', path.join(__dirname, 'views'));
@@ -32,6 +47,7 @@
  
  /**use to the controller**/
  app.use('/', member);
+  app.use('/test', member);
  app.use('/register', member);
  app.use('/login', member);
  app.use('/changePassword', member);
@@ -84,12 +100,19 @@
          error: {}
      });
  });
- 
- 
+ /*
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});
+*/
 
-module.exports = app;
+const PORT = process.env.PORT || 8080;
 
-var server = app.listen(8081, function () {
+
+
+
+
+var server = app.listen(8082, function () {
 
   var host = server.address().address
   var port = server.address().port
@@ -97,4 +120,7 @@ var server = app.listen(8081, function () {
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
+
+module.exports = app;
+
 
