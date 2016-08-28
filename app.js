@@ -1,5 +1,7 @@
  //require("script/function.js");
  /**require the library**/
+ 'use strict';
+ 
  var express = require('express');
  var path = require('path');
  var favicon = require('serve-favicon');
@@ -49,7 +51,7 @@ app.use(cors());
  
  /**use to the controller**/
  app.use('/', member);
-  app.use('/test', member);
+ app.use('/test', member);
  app.use('/register', member);
  app.use('/login', member);
  app.use('/changePassword', member);
@@ -108,13 +110,21 @@ app.listen(process.env.PORT || 3000, function(){
 });
 */
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8082;
 
 
+app.server = http.createServer(app);
+app.server.listen(8081, function () {
 
+  var host = app.server.address().address
+  var port = app.server.address().port
 
+  console.log("Example app listening at http://%s:%s", host, port)
+  console.log(process.env.PORT);
+});
 
-var server = app.listen(process.env.PORT || 3000, function () {
+/*
+var server = app.listen(8082, function () {
 
   var host = server.address().address
   var port = server.address().port
@@ -122,7 +132,8 @@ var server = app.listen(process.env.PORT || 3000, function () {
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
-
+*/
+ 
 module.exports = app;
 
 

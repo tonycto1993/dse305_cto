@@ -44,7 +44,7 @@ scotchTodo.controller("mainController", function ($scope, $http) {
     $scope.test = function() {
         $http({
             method : "GET",
-            url : "/register"
+            url : "http://localhost:8081/test"
         }).then(function mySucces(response) {
             //$scope.myWelcome = response.data;
             console.log(response);
@@ -55,8 +55,6 @@ scotchTodo.controller("mainController", function ($scope, $http) {
     }
     
     $scope.test();
-
-
 });
 
 </script>
