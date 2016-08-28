@@ -114,13 +114,12 @@ const PORT = process.env.PORT || 8081;
 
 
 app.server = http.createServer(app);
-app.server.listen(PORT, function () {
+app.server.listen(8081, function () {
 
   var host = app.server.address().address
   var port = app.server.address().port
 
   console.log("Example app listening at http://%s:%s", host, port)
-  console.log(process.env.PORT);
 });
 
 /*
