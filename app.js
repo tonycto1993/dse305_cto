@@ -141,11 +141,11 @@ app.listen(process.env.PORT || 3000, function(){
 });
 */
 
-const PORT = process.env.PORT || 8081;
+var PORT = process.env.PORT || 8082;
 
 
 app.server = http.createServer(app);
-app.server.listen(8082, function () {
+app.server.listen(PORT, function () {
 
   var host = app.server.address().address
   var port = app.server.address().port
