@@ -20,7 +20,7 @@ router.post('/searchBooksByKeyword', function(req,res,next){
         //return false;
     }else{
         /**get book detail from google api by keyword**/
-        var url = 'https://www.googleapis.com/books/v1/volumes?q='+keyword+'&maxResults=40&orderBy=newest&filter=free-ebooks';//&start=11
+        var url = 'https://www.googleapis.com/books/v1/volumes?q='+keyword+'&maxResults=40&filter=free-ebooks';//&start=11
         https.get(url, function(response){
             var body = '';
         

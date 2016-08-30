@@ -44,9 +44,11 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
                 alert(response.data["message"]);return false;
             }
             var responseData = response.data.data;
+            console.log(responseData);
             //console.log(responseData.items);
             for (var key in responseData.items) {
                  $scope.data.push(responseData.items[key]);
+                 //console.log(responseData.items[key]);
             }
             $scope.total = responseData.totalItems;
         }, function myError(response) {
