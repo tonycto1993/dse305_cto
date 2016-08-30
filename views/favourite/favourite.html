@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel='stylesheet prefetch' href='../../css/materialize.min.css'>
+<link rel='stylesheet prefetch' href='../../css/icon.css'>
+<link rel='stylesheet prefetch' href='../../css/common.css'>
+<script src="../../js/jquery.min.js"></script><!-- load jquery -->
+<script src='../../js/materialize.min.js'></script>
+<script src="../../js/angular.min.js"></script>
+<script src='../../js/angular-cookies.min.js'></script>
+<script>
+$(document).ready(function() {
+    $('select').material_select();
+  });
+var app=angular.module('myApp', ['ngCookies']);
+
+// alternate - https://github.com/michaelbromley/angularUtils/tree/master/src/directives/pagination
+// alternate - http://fdietz.github.io/recipes-with-angular-js/common-user-interface-patterns/paginating-through-client-side-data.html
+
+app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function ($scope, $http, $filter, $cookieStore) {
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+    $scope.data = [];
+    //$scope.books.title = [];
+    //$scope.books.thumb = [];
+    $scope.q = '';
+    $scope.user_name = $cookieStore.get("user_name");
+    console.log($cookieStore.get("user_name"));
+    $scope.getFavoruiteList = function() {
+        $scope.data = [];
+        var passData = $.param({
+            user_name: $cookieStore.get("user_name")
+        });
+        
+         $http({
+            method : "POST",
+            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/getFavouriteList",
+            data: passData,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function mySucces(response) {
+            //$scope.myWelcome = response.data;
+            
+            if(response.data["status"] != 0){
+                alert(response.data["message"]);return false;
+            }
+            var responseData = response.data.data;
+            
+            var count = 0;
+            for (var key in responseData) {
+                 //$scope.data.push(responseData[key]);
+                 $scope.searchByVolumeID(responseData[key].volume_id);
+                 count++;
+            }
+            $scope.total = count;
+            //$scope.total = responseData.totalItems;
+            
+        }, function myError(response) {
+            //$scope.myWelcome = response.statusText;
+            console.log(response);
+        });
+    }
+    
+    $scope.getFavoruiteList();
+    
+    $scope.searchByVolumeID = function(volumeID) {
+        $scope.data = [];
+        var passData = $.param({
+            volumeID: volumeID
+        });
+        
+         $http({
+            method : "GET",
+            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/searchBookByVolumeID/"+volumeID,//1ebwAAAAMAAJ
+            data: passData,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function mySucces(response) {
+            //$scope.myWelcome = response.data;
+            var responseData = response.data.data;
+            $scope.data.push(responseData);
+            console.log($scope.data);
+            //$scope.bookImg = responseData.volumeInfo.imageLinks.medium;
+            //$scope.bookTitle = responseData.volumeInfo.title;
+        }, function myError(response) {
+            //$scope.myWelcome = response.statusText;
+            console.log(response);
+        });
+    }
+    
+    $scope.removeFavoruite = function(event) {
+        //$scope.data = [];
+        //alert(event.target.id);
+        var passData = $.param({
+            volume_id: event.target.id,
+            user_name: $cookieStore.get("user_name")
+        });
+         $http({
+            method : "POST",
+            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/removeFavourite",
+            data: passData,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).then(function mySucces(response) {
+            //$scope.myWelcome = response.data;
+            console.log(response);
+            if(response.data["status"] != 0){
+                alert(response.data["message"]);return false;
+            }
+            //var responseData = response.data.data;
+            alert(response.data["message"]);
+            window.location.reload();
+            //$scope.data.remove(event.target.value);
+           // $scope.$apply();
+        }, function myError(response) {
+            //$scope.myWelcome = response.statusText;
+            console.log(response);
+        });
+    }
+    
+    $scope.logout = function() {
+        $cookieStore.remove("user_name");
+        window.location.href = "/index";
+    };
+    
+    $scope.showFavourite = function(value) {
+          return angular.isUndefined($cookieStore.get("user_name"));
+    };
+   
+    
+    $scope.getData = function () {
+      // needed for the pagination calc
+      // https://docs.angularjs.org/api/ng/filter/filter
+      return $filter('filter')($scope.data, $scope.q)
+     /* 
+       // manual filter
+       // if u used this, remove the filter from html, remove above line and replace data with getData()
+       
+        var arr = [];
+        if($scope.q == '') {
+            arr = $scope.data;
+        } else {
+            for(var ea in $scope.data) {
+                if($scope.data[ea].indexOf($scope.q) > -1) {
+                    arr.push( $scope.data[ea] );
+                }
+            }
+        }
+        return arr;
+       */
+    }
+    
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.getData().length/$scope.pageSize);                
+    }
+    
+    for (var i=0; i<65; i++) {
+        //$scope.data.push("Item "+i);
+    }
+}]);
+
+//We already have a limitTo filter built-in to angular,
+//let's make a startFrom filter
+app.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    }
+});
+
+</script>
+<body>
+<div ng-app="myApp" ng-controller="MyCtrl">
+<div class="container">
+    <div class="center"><h1>Favourite List</h1></div>
+    <a href="/registerMember" ng-show="true">Register</a>  
+        <a href="/loginMember" ng-show="showFavourite()">Login</a>  
+        <a href="/searchKeyword" ng-show="true">Search</a> 
+         <div class="right">
+            <a class="waves-effect waves-light btn green" ng-show="!showFavourite()" ng-click="logout()">Logout</a>
+        </div>
+    <div id="signup">
+      <div class="signup-screen">
+             <div>Total : <span name="total" ng-model="total" id="total">{{total}}</span></div>
+             <ul class="list">
+                <li ng-repeat="(key, item) in data | filter:q | startFrom:currentPage*pageSize | limitTo:pageSize">
+                    <div class="row valign-wrapper">
+                      <div class="col s4 m2">
+                        <img src="{{item.volumeInfo.imageLinks.thumbnail}}" alt="" class="circle responsive-img valign" style="border-radius:0;">
+                      </div>
+                      <div class="col s8 m10">
+                        <div class="black-text">
+                            <div class="title">{{item.volumeInfo.title}}</div>
+                            <div class="space-top">
+                                <div class="left">
+                                    {{item.volumeInfo.publisher}}  {{item.volumeInfo.publishedDate}}
+                                </div>
+                                <div class="right">
+                                    <a href="/searchVolumeID/{{item.id}}" class="waves-effect waves-light btn red" target="_blank">Detail</a>
+                                    <a href="{{item.volumeInfo.infoLink}}" class="waves-effect waves-light btn green" target="_blank">Info</a>
+                                    <a href="{{item.volumeInfo.previewLink}}" class="waves-effect waves-light btn orange" target="_blank">Preview</a>
+                                    <a class="waves-effect waves-light btn red" ng-model="favourite" value="{{key}}" ng-show="true" target="_blank" id="{{item.id}}" data-ng-click="removeFavoruite($event)">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </li>
+            </ul>
+            
+            <!--table class="bordered">
+                <thead>
+                  <tr>
+                      <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="item in data | filter:q | startFrom:currentPage*pageSize | limitTo:pageSize">
+                    <td>{{item}}</td>
+                  </tr>
+                </tbody>
+            </table-->
+      
+            <div  class="space-top text-center">
+                <button class="waves-effect waves-light btn done" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                   <i class="material-icons left">chevron_left</i> Previous
+                </button>
+                {{currentPage+1}}/{{numberOfPages()}}
+                <button class="waves-effect waves-light btn done" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                    <i class="material-icons right">chevron_right</i> Next
+                </button>
+            </div>
+      </div>
+    </div>
+</div>    
+</div>
+</body>
+</html>

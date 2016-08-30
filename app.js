@@ -17,11 +17,15 @@
  var member = require('./routes/member');
  var search = require('./routes/search');
  var favourite = require('./routes/favourite');
+ var cors = require('cors');
  
-var cors = require('cors');
+ var ParseServer = require('parse-server').ParseServer;
+
 
 
 var app = express();
+
+
 
 //CORS middleware
 var allowCrossDomain = function(req, res, next) {
@@ -48,25 +52,52 @@ app.use(cors());
  app.use(express.static(path.join(__dirname, '../public')));
  app.use(methodOverride());
  
+ app.use('/css', express.static('css'));
+ app.use('/js', express.static('js'));
  
+ app.get('/',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/index.html'));
+});
+app.get('/index',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/index.html'));
+});
  /**use to the controller**/
  app.use('/', member);
- app.use('/test', member);
  app.use('/register', member);
+ app.get('/registerMember',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/member/register.html'));
+});
  app.use('/login', member);
+ app.get('/loginMember',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/member/login.html'));
+});
  app.use('/changePassword', member);
- 
+ app.get('/changePasswordMember',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/member/changePassword.html'));
+});
  
  app.use('/', search);
  app.use('/searchBooksByKeyword', search);
+ app.get('/searchKeyword',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/books/booksKeyword.html'));
+});
  app.use('/searchBookByVolumeID', search);
+  app.get('/searchVolumeID/:volumeID',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/books/booksVolumeID.html'));
+});
  
  
  app.use('/', favourite);
  app.use('/addToFavouriteList', favourite);
  app.use('/getFavouriteList', favourite);
  app.use('/addNotes', favourite);
+ app.use('/getNotes', favourite);
  app.use('/removeFavourite', favourite);
+ 
+
+  app.get('/favouriteList',function(req,res){
+  res.sendFile(path.join(__dirname+'/views/favourite/favourite.html'));
+});
  
  
  
@@ -114,7 +145,7 @@ const PORT = process.env.PORT || 8081;
 
 
 app.server = http.createServer(app);
-app.server.listen(8081, function () {
+app.server.listen(8082, function () {
 
   var host = app.server.address().address
   var port = app.server.address().port
@@ -122,16 +153,6 @@ app.server.listen(8081, function () {
   console.log("Example app listening at http://%s:%s", host, port)
 });
 
-/*
-var server = app.listen(8082, function () {
-
-  var host = server.address().address
-  var port = server.address().port
-
-  console.log("Example app listening at http://%s:%s", host, port)
-
-})
-*/
  
 module.exports = app;
 

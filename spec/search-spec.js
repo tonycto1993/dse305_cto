@@ -10,13 +10,13 @@ frisby.globalSetup({
 
 
 frisby.create('add a new member')
-  .post('http://localhost:8081/searchBooksByKeyword', {"keyword": "harry proter"}, {json: true})
+  .post('http://localhost:8082/searchBooksByKeyword', {"keyword": "harry proter"}, {json: true})
   .expectStatus(200)
   .expectHeaderContains('content-type', 'application/json')
   .toss()
   
 frisby.create('add a new member')
-  .post('http://localhost:8081/searchBookByVolumeID', {"volumeID": "1ebwAAAAMAAJ"}, {json: true})
+  .post('http://localhost:8082/searchBookByVolumeID', {"volumeID": "1ebwAAAAMAAJ"}, {json: true})
   .expectStatus(200)
   .expectHeaderContains('content-type', 'application/json')
   .toss()

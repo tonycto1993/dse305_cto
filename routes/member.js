@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-
 //var mongoose = require('mongoose');
 //var member = require('../models/member.js');
 var mongoose = require('../models/db.js');
@@ -18,17 +17,11 @@ function validateEmail(email) {
   return re.test(email);
 }
 
-/**register the member**/
-router.get('/test', function(req,res,next){
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    console.log("User name = ");
-     res.end("yes");
-});
-
 router.post('/register', function(req,res,next){
     console.log('--member register--');
     var error = 0;
     var msg;
+    var passData;
     var user_name = req.body.user_name;
     var password = req.body.password;
     var name = req.body.name;
@@ -60,6 +53,7 @@ router.post('/register', function(req,res,next){
     }
     //console.log('data no error');
     member.find({user_name: user_name}, function(err, data){//find the existing member
+        passData = data;
         if(err){
             console.log("error : "+err);
             msg = 'can not find memeber';
@@ -75,12 +69,13 @@ router.post('/register', function(req,res,next){
                     email: email,
                     status: false,
                 },function(err, todo){
-                    
+                    passData = todo;
                     if(err){
                         console.log(err);
                         msg = 'can not register memeber';
                     }else{
                         console.log(todo);
+                        passData = todo;
                         msg = 'register memeber successful';
                     }   
                 });
@@ -93,7 +88,7 @@ router.post('/register', function(req,res,next){
         }
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('content-type', 'application/json')
-        res.send(res.statusCode, {status: data.status, message: msg, data: data})
+        res.send(res.statusCode, {status: error, message: msg, data: passData})
         res.end()
     });
     
@@ -105,8 +100,6 @@ var callback = function(err, data){
       return console.log(err)
     else 
       console.log('login ok');
-      
-    
 };
 
 /**member login**/
@@ -115,20 +108,25 @@ router.post('/login', function(req,res,next){
     var user_name = req.body.user_name;
     var password = req.body.password;
     var msg;
+    var error = 0;
     //console.log('username : ' + user_name + ", password : "+password);
     member.find({user_name: user_name},{password : password}, function(err, data){//find the member
-        if(err) 
+        if(err) {
            console.log(err)
+           error = 1;
+        }
         else 
            console.log('login ok');
         //console.log(data);
        if(data == [] || data == null || data == ''){
            msg = "cannot found member";
+           error = 2;
        }else{
            msg = "member login successful";
        }
+       console.log(msg);
        res.setHeader('content-type', 'application/json')
-       res.status(res.statusCode).send({status: 1, message: msg, data: data})
+       res.status(res.statusCode).send({status: error, message: msg, data: data})
        res.end()
     });
     
@@ -141,16 +139,19 @@ router.post('/changePassword', function(req,res,next){
     var password = req.body.password;
     var new_password = req.body.new_password;
     var msg;
+    var error = 0;
     if(password == '' || password == null || password.length < 6){
         console.log("password has problem.");
         msg = 'password should more than 5 characters';
+        error = 1;
     }else{
         //member.update({user_name: user_name, password: password}, {password: news_password}, {multi: false}, function(err, data, numberAffected){
         /**update member password**/
         member.update({user_name: user_name, password: password}, {password: new_password}, function(err, data, numberAffected){
-        if(err) 
+        if(err){
             console.error(err);
-        else
+            error = 2;
+        }else
             console.log("The raw response from Mongo was", data);
         
         
@@ -158,10 +159,11 @@ router.post('/changePassword', function(req,res,next){
             msg = "change password successful";
         }else{
             msg = "change password failed";
+            error = 3;
         }     
             
         res.setHeader('content-type', 'application/json')
-        res.status(res.statusCode).send({status: 1, message: msg, data: data})
+        res.status(res.statusCode).send({status: error, message: msg, data: data})
         res.end()
         });
     }
