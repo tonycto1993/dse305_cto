@@ -154,7 +154,7 @@ app.server.listen(8082, function () {
   console.log("Example app listening at http://%s:%s", host, port)
 });
 */
-http.createServer( app ).listen( app.get( 'port' ), function (){
+http.createServer( app ).listen( 8082, function (){
   console.log( 'Express server listening on port ' + app.get( 'port' ));
 });
 
