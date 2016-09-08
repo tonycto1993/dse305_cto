@@ -145,7 +145,7 @@ var PORT = process.env.PORT || 8082;
 
 //create the server
 app.server = http.createServer(app);
-app.server.listen(process.env.PORT || 3000, function () {
+app.server.listen(8082, function () {
 
   var host = app.server.address().address
   var port = app.server.address().port
