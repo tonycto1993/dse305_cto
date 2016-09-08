@@ -24,7 +24,7 @@
 
 
 var app = express();
-
+app.set( 'port', process.env.PORT || 3001 );
 
 
 //CORS middleware
@@ -144,6 +144,7 @@ app.listen(process.env.PORT || 3000, function(){
 var PORT = process.env.PORT || 8082;
 
 //create the server
+/*
 app.server = http.createServer(app);
 app.server.listen(8082, function () {
 
@@ -151,6 +152,10 @@ app.server.listen(8082, function () {
   var port = app.server.address().port
 
   console.log("Example app listening at http://%s:%s", host, port)
+});
+*/
+http.createServer( app ).listen( app.get( 'port' ), function (){
+  console.log( 'Express server listening on port ' + app.get( 'port' ));
 });
 
  
