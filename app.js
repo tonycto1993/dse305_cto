@@ -12,7 +12,7 @@
  var nodemailer = require("nodemailer");
  var smtpTransport = require("nodemailer-smtp-transport");
  var http           = require( 'http' );
- var methodOverride = require('method-override');
+ //var methodOverride = require('method-override');
  
  var member = require('./routes/member');
  var search = require('./routes/search');
@@ -50,7 +50,7 @@ app.use(cors());
  app.use(bodyParser.urlencoded({ extended: false }));
  app.use(cookieParser());
  app.use(express.static(path.join(__dirname, '../public')));
- app.use(methodOverride());
+ //app.use(methodOverride());
  
  app.use('/css', express.static('css'));
  app.use('/js', express.static('js'));
