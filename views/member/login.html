@@ -213,7 +213,7 @@ scotchTodo.controller("mainController", function ($scope, $http, $cookieStore) {
             $cookieStore.put("user_name",$scope.user_name);
             //$cookieStore.get("name") == "my name";
             //$cookieStore.remove("name");
-            window.location.href = "/index";
+            window.location.href = "/";
             
         }, function myError(response) {
             //$scope.myWelcome = response.statusText;
