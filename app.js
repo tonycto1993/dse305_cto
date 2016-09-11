@@ -24,7 +24,7 @@
 
 
 var app = express();
-app.set( 'port', process.env.PORT || 3001 );
+//app.set( 'port', process.env.PORT || 3001 );
 
 
 //CORS middleware
