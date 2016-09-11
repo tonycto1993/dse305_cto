@@ -56,7 +56,7 @@ app.use(cors());
  app.use('/js', express.static('js'));
  
  app.get('/',function(req,res){
-  res.sendFile(path.join(__dirname+'/views/index.html'));
+  res.sendFile(path.join(__dirname+'/views/books/booksKeyword.html'));
 });
 //app.get('/index',function(req,res){
 //  res.sendFile(path.join(__dirname+'/views/index.html'));
@@ -158,7 +158,7 @@ app.server.listen(8082, function () {
 //  console.log( 'Express server listening on port ' + app.get( 'port' ));
 //});
 
-app.set( 'port', 8082 || 3001 );
+app.set( 'port', process.env.PORT || 3001 );
 http.createServer( app ).listen( app.get( 'port' ), function (){
   console.log( 'Express server listening on port ' + app.get( 'port' ));
 });
