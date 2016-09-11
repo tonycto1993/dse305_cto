@@ -118,7 +118,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
     
     $scope.logout = function() {
         $cookieStore.remove("user_name");
-        window.location.href = "/index";
+        window.location.href = "/";
     };
     
     $scope.showFavourite = function(value) {
