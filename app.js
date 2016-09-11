@@ -141,7 +141,7 @@ app.listen(process.env.PORT || 3000, function(){
 });
 */
 
-var PORT = process.env.PORT || 8082;
+//var PORT = process.env.PORT || 8082;
 
 //create the server
 /*
@@ -154,10 +154,15 @@ app.server.listen(8082, function () {
   console.log("Example app listening at http://%s:%s", host, port)
 });
 */
-http.createServer( app ).listen( 8082, function (){
+//http.createServer( app ).listen( 8082, function (){
+//  console.log( 'Express server listening on port ' + app.get( 'port' ));
+//});
+
+app.set( 'port', process.env.PORT || 3001 );
+http.createServer( app ).listen( app.get( 'port' ), function (){
   console.log( 'Express server listening on port ' + app.get( 'port' ));
 });
-
+ 
  
 module.exports = app;
 
