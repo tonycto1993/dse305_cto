@@ -58,9 +58,9 @@ app.use(cors());
  app.get('/',function(req,res){
   res.sendFile(path.join(__dirname+'/views/index.html'));
 });
-app.get('/index',function(req,res){
-  res.sendFile(path.join(__dirname+'/views/index.html'));
-});
+//app.get('/index',function(req,res){
+//  res.sendFile(path.join(__dirname+'/views/index.html'));
+//});
  /**use to the controller**/
  app.use('/', member);
  app.use('/register', member);
