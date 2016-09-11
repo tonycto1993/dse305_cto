@@ -39,7 +39,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
         
          $http({
             method : "GET",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/searchBookByVolumeID/"+$scope.volumeID,//1ebwAAAAMAAJ
+            url : "/searchBookByVolumeID/"+$scope.volumeID,//1ebwAAAAMAAJ
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -50,7 +50,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
             $scope.infoLink = responseData.volumeInfo.infoLink;
             $scope.previewLink = responseData.volumeInfo.previewLink;
             $scope.itemID = responseData.id
-            console.log(responseData.volumeInfo.imageLinks);
+            //console.log(responseData.volumeInfo.imageLinks);
             $scope.getNotesToFavoruite();
         }, function myError(response) {
             //$scope.myWelcome = response.statusText;
@@ -70,7 +70,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
         
          $http({
             method : "POST",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/addToFavouriteList",
+            url : "/addToFavouriteList",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -102,7 +102,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
         
          $http({
             method : "POST",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/addNotes",
+            url : "/addNotes",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -129,7 +129,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
         
          $http({
             method : "POST",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/getNotes",
+            url : "/getNotes",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {

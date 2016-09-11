@@ -35,7 +35,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
         
          $http({
             method : "POST",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/getFavouriteList",
+            url : "/getFavouriteList",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -96,7 +96,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
         });
          $http({
             method : "POST",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/removeFavourite",
+            url : "/removeFavourite",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -109,7 +109,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
             alert(response.data["message"]);
             window.location.reload();
             //$scope.data.remove(event.target.value);
-           // $scope.$apply();
+            //$scope.$apply();
         }, function myError(response) {
             //$scope.myWelcome = response.statusText;
             console.log(response);

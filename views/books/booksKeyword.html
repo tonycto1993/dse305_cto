@@ -35,7 +35,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
         
          $http({
             method : "POST",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/searchBooksByKeyword",
+            url : "/searchBooksByKeyword",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -68,7 +68,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
         
          $http({
             method : "POST",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/addToFavouriteList",
+            url : "/addToFavouriteList",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {

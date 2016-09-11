@@ -243,7 +243,7 @@ scotchTodo.controller("mainController", function ($scope, $http) {
         
         $http({
             method : "POST",
-            url : "http://dse305-assignment2-gn02519960.c9users.io:8082/register",
+            url : "/register",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
