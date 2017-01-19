@@ -5,16 +5,23 @@
 <link rel='stylesheet prefetch' href='../../css/materialize.min.css'>
 <link rel='stylesheet prefetch' href='../../css/icon.css'>
 <link rel='stylesheet prefetch' href='../../css/common.css'>
+<link rel='stylesheet prefetch' href='../../css/table.css'>
 <script src="../../js/jquery.min.js"></script><!-- load jquery -->
 <script src='../../js/materialize.min.js'></script>
 <script src="../../js/angular.min.js"></script>
 <script src='../../js/angular-cookies.min.js'></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
+$( function() {
+    $( "#tabs" ).tabs();
+  } );
 $(document).ready(function() {
     $('select').material_select();
   });
 var app=angular.module('myApp', ['ngCookies']);
-
 // alternate - https://github.com/michaelbromley/angularUtils/tree/master/src/directives/pagination
 // alternate - http://fdietz.github.io/recipes-with-angular-js/common-user-interface-patterns/paginating-through-client-side-data.html
 
@@ -27,33 +34,48 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
     $scope.q = '';
     $scope.user_name = $cookieStore.get("user_name");
     console.log($cookieStore.get("user_name"));
-    $scope.searchByKeyword = function() {
+    $scope.searchByKeyword = function(method) {
         $scope.data = [];
         var passData = $.param({
-            keyword: $scope.keyword
+            keyword: $scope.keyword,
+            keyword2: $scope.keyword2,
+            method: method
         });
-        
+        console.log($scope.keyword+" "+$scope.keyword2);
          $http({
             method : "POST",
-            url : "/searchBooksByKeyword",
+           // url : "/searchBooksByKeyword"
+            url : "https://dse305-cto-gn02519960.c9users.io:8081/searchBooksByKeyword",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
             //$scope.myWelcome = response.data;
-            if(response.data["status"] != 0){
-                alert(response.data["message"]);return false;
-            }
-            var responseData = response.data.data;
             console.log(responseData);
-            //console.log(responseData.items);
-            for (var key in responseData.items) {
-                 $scope.data.push(responseData.items[key]);
-                 //console.log(responseData.items[key]);
+            if(responseData=='undefined'){
+                alert('Can not found this country.');
+            }else{
+                if(response.data["status"] != 0){
+                    alert(response.data["message"]);return false;
+                }
+                var responseData = response.data.data;
+                console.log(responseData);
+                //console.log(responseData.items);
+                
+                //$scope.total = responseData.totalItems;
+                if(method == 1){
+                    for (var key in responseData.list) {
+                     $scope.data.push(responseData.list[key]);
+                     //console.log(responseData.list[key]);
+                     }
+                    $scope.country = responseData.city.name;
+                }else if(method == 2){
+                    $scope.country = responseData.name;
+                }
             }
-            $scope.total = responseData.totalItems;
         }, function myError(response) {
             //$scope.myWelcome = response.statusText;
             console.log(response);
+            alert('Search failed');
         });
     }
     
@@ -68,7 +90,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
         
          $http({
             method : "POST",
-            url : "/addToFavouriteList",
+            url : "https://dse305-cto-gn02519960.c9users.io:8081/addToFavouriteList",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -139,6 +161,7 @@ app.filter('startFrom', function() {
 });
 
 </script>
+
 <body>
 <div ng-app="myApp" ng-controller="MyCtrl">
 <div class="container">
@@ -155,44 +178,147 @@ app.filter('startFrom', function() {
     <div id="signup">
       <div class="signup-screen">
           <form class="form-register" method="post" name="register" novalidate>
-              <div class="row">
+              
+             
+             
+             <!-- tab start -->
+            <div id="tabs">
+              <ul>
+                <li><a href="#tabs-1">10 Days daily forecast</a></li>
+                <li><a href="#tabs-2">Current Weather</a></li>
+              </ul>
+              <div id="tabs-1">
+               <div class="row">
                   <div class="input-field col s12 m5">
                       <input id="keyword" type="text" class="validate" name="keyword" ng-model="keyword" required>
-                      <label for="keyword">Keyword</label>
+                      <label for="keyword">Input</label>
                   </div>
                     <div class="input-field col s12 m3 text-center">
-                      <button ng-disabled="form-register.$invalid" class="waves-effect waves-light btn done" ng-click="searchByKeyword()">
-                        <i class="material-icons left">done</i> Done
+                      <button class="waves-effect waves-light btn done" ng-click="searchByKeyword(1)">
+                        <i class="material-icons left"></i> Search
                       </button>
-                    </div>
+                    </div>  
+ 
                 </div>
-             </form>
-             <div>Total : <span name="total" ng-model="total" id="total">{{total}}</span></div>
+                 <div id="tab1View">
+             <div>Country : {{country}}</div>
              <ul class="list">
                 <li ng-repeat="item in data | filter:q | startFrom:currentPage*pageSize | limitTo:pageSize">
                     <div class="row valign-wrapper">
                       <div class="col s4 m2">
-                        <img src="{{item.volumeInfo.imageLinks.thumbnail}}" alt="" class="circle responsive-img valign" style="border-radius:0;">
+                        <!--img src="{{item.volumeInfo.imageLinks.thumbnail}}" alt="" class="circle responsive-img valign" style="border-radius:0;"-->
+                        <b>DAY {{$index+1}}<br/>({{item.dt * 1000 | date:'dd, MMM yyyy'}})</b>
                       </div>
                       <div class="col s8 m10">
                         <div class="black-text">
-                            <div class="title">{{item.volumeInfo.title}}</div>
-                            <div class="space-top">
+                            <table class="rwd-table">
+                                <tr>
+                                    <th>
+                                        Clouds :
+                                    </th>
+                                    <td>
+                                        {{item.clouds}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Deg :
+                                    </th>
+                                    <td>
+                                        {{item.deg}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Humidity :
+                                    </th>
+                                    <td>
+                                        {{item.humidity}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Pressure :
+                                    </th>
+                                    <td>
+                                        {{item.pressure}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Rain :
+                                    </th>
+                                    <td>
+                                        {{item.rain}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Speed :
+                                    </th>
+                                    <td>
+                                        {{item.speed}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Temp :
+                                    </th>
+                                    <td>
+                                        day : {{item.temp.day}}, eve : {{item.temp.eve}}, max : {{item.temp.max}}, 
+                                    min : {{item.temp.min}}, morn : {{item.temp.morn}}, night : {{item.temp.night}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Weather Description :
+                                    </th>
+                                    <td>
+                                        {{item.weather[0].description}}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!--div class="space-top">
                                 <div class="left">
-                                    {{item.volumeInfo.publisher}}  {{item.volumeInfo.publishedDate}}
+                                    
                                 </div>
                                 <div class="right">
-                                    <a href="/searchVolumeID/{{item.id}}" class="waves-effect waves-light btn red" target="_blank">Detail</a>
+                                    <!--a href="https://dse305-cto-gn02519960.c9users.io:8081/searchVolumeID/{{item.id}}" class="waves-effect waves-light btn red" target="_blank">Detail</a>
                                     <a href="{{item.volumeInfo.infoLink}}" class="waves-effect waves-light btn green" target="_blank">Info</a>
                                     <a href="{{item.volumeInfo.previewLink}}" class="waves-effect waves-light btn orange" target="_blank">Preview</a>
                                     <a class="waves-effect waves-light btn red" ng-model="favourite" ng-show="!showFavourite()" target="_blank" id="{{item.id}}" data-ng-click="addToFavoruite($event)">Favourite</a>
                                 </div>
-                            </div>
+                            </div-->
                         </div>
                       </div>
                     </div>
                 </li>
             </ul>
+            </div>
+              </div>
+              <div id="tabs-2">
+                  <div class="input-field col s12 m5">
+                      <input id="keyword" type="text" class="validate" name="keyword" ng-model="keyword" required>
+                      <label for="keyword">Latitude</label>
+                  </div>
+                  <div class="input-field col s12 m5">
+                      <input id="keyword2" type="text" class="validate" name="keyword2" ng-model="keyword2" required>
+                      <label for="keyword2">Longitude</label>
+                  </div>
+                  <div class="input-field col s12 m3 text-center">
+                      <button  class="waves-effect waves-light btn done" ng-click="searchByKeyword(2)">
+                        <i class="material-icons left"></i> Search
+                      </button>
+                  </div>
+                  <div>
+                      Country : {{country}}
+                   </div>
+              </div>
+            </div>
+             <!-- end tab -->
+             </form>
+            
             <div  class="space-top text-center">
                 <button class="waves-effect waves-light btn done" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
                    <i class="material-icons left">chevron_left</i> Previous

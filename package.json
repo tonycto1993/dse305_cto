@@ -34,13 +34,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/gn02519960/Assignment2-3.git"
+    "url": "git+https://github.com/tonycto1993/dse305_cto.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/gn02519960/Assignment2-3/issues"
+    "url": "https://gitlab.com/tonycto1993/dse305_cto/issues"
   },
-  "homepage": "https://gitlab.com/gn02519960/Assignment2-3#README",
+  "homepage": "https://gitlab.com/tonycto1993/dse305_cto#README",
   "description": ""
 }

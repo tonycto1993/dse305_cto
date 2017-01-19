@@ -199,7 +199,7 @@ scotchTodo.controller("mainController", function ($scope, $http, $cookieStore) {
     
          $http({
             method : "POST",
-            url : "/login",
+            url : "https://dse305-cto-gn02519960.c9users.io:8081/login",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
