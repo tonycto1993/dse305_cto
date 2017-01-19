@@ -9,9 +9,13 @@
 <script src='../../js/materialize.min.js'></script>
 <script src="../../js/angular.min.js"></script>
 <script src='../../js/angular-cookies.min.js'></script>
+<script src='../../js/angular-dragdrop.min.js'></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 $(document).ready(function() {
     $('select').material_select();
+    $("#sortable").sortable();
+    $("#sortable").disableSelection();
   });
 var app=angular.module('myApp', ['ngCookies']);
 
@@ -47,12 +51,15 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
             var responseData = response.data.data;
             
             var count = 0;
+            $scope.vol = new Array();
             for (var key in responseData) {
                  //$scope.data.push(responseData[key]);
                  $scope.searchByVolumeID(responseData[key].volume_id);
                  count++;
+                 $scope.vol.push(responseData[key].volume_id);
             }
             $scope.total = count;
+            console.log($scope.vol);
             //$scope.total = responseData.totalItems;
             
         }, function myError(response) {
@@ -180,23 +187,20 @@ app.filter('startFrom', function() {
     <div id="signup">
       <div class="signup-screen">
              <div>Total : <span name="total" ng-model="total" id="total">{{total}}</span></div>
-             <ul class="list">
-                <li ng-repeat="(key, item) in data | filter:q | startFrom:currentPage*pageSize | limitTo:pageSize">
+             <ul id="sortable" class="list">
+                <li ng-repeat="(key, item) in data | filter:q | startFrom:currentPage*pageSize | limitTo:pageSize" data-drop="true" data-drag="true">
                     <div class="row valign-wrapper">
                       <div class="col s4 m2">
                         <img src="{{item.volumeInfo.imageLinks.thumbnail}}" alt="" class="circle responsive-img valign" style="border-radius:0;">
                       </div>
                       <div class="col s8 m10">
                         <div class="black-text">
-                            <div class="title">{{item.volumeInfo.title}}</div>
+                            <div class="title">{{vol[key]}}</div>
                             <div class="space-top">
                                 <div class="left">
                                     {{item.volumeInfo.publisher}}  {{item.volumeInfo.publishedDate}}
                                 </div>
                                 <div class="right">
-                                    <a href="/searchVolumeID/{{item.id}}" class="waves-effect waves-light btn red" target="_blank">Detail</a>
-                                    <a href="{{item.volumeInfo.infoLink}}" class="waves-effect waves-light btn green" target="_blank">Info</a>
-                                    <a href="{{item.volumeInfo.previewLink}}" class="waves-effect waves-light btn orange" target="_blank">Preview</a>
                                     <a class="waves-effect waves-light btn red" ng-model="favourite" value="{{key}}" ng-show="true" target="_blank" id="{{item.id}}" data-ng-click="removeFavoruite($event)">Remove</a>
                                 </div>
                             </div>

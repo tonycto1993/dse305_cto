@@ -79,11 +79,12 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
         });
     }
     
-    $scope.addToFavoruite = function(event) {
-        //$scope.data = [];
-        //alert(event.target.id);
+    $scope.addToFavoruite = function() {
+        $scope.data = [];
+        var name = $("#keyword").val();
+        alert(name);
         var passData = $.param({
-            volume_id: event.target.id,
+            volume_id: name,
             user_name: $cookieStore.get("user_name"),
             notes: ''
         });
@@ -197,11 +198,16 @@ app.filter('startFrom', function() {
                       <button class="waves-effect waves-light btn done" ng-click="searchByKeyword(1)">
                         <i class="material-icons left"></i> Search
                       </button>
-                    </div>  
+                    </div>
  
                 </div>
                  <div id="tab1View">
              <div>Country : {{country}}</div>
+             <div class="input-field col s12 m3 text-center">
+              <button class="waves-effect waves-light btn done" ng-click="addToFavoruite()">
+                <i class="material-icons left"></i> Add to Favourite
+              </button>
+            </div>
              <ul class="list">
                 <li ng-repeat="item in data | filter:q | startFrom:currentPage*pageSize | limitTo:pageSize">
                     <div class="row valign-wrapper">
@@ -319,15 +325,6 @@ app.filter('startFrom', function() {
              <!-- end tab -->
              </form>
             
-            <div  class="space-top text-center">
-                <button class="waves-effect waves-light btn done" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                   <i class="material-icons left">chevron_left</i> Previous
-                </button>
-                {{currentPage+1}}/{{numberOfPages()}}
-                <button class="waves-effect waves-light btn done" ng-disabled="currentPage >= getData().length/pageSize - 1" ng-click="currentPage=currentPage+1">
-                    <i class="material-icons right">chevron_right</i> Next
-                </button>
-            </div>
       </div>
     </div>
 </div>    
