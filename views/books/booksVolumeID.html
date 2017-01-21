@@ -39,7 +39,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
         
          $http({
             method : "GET",
-            url : "https://dse305-cto-gn02519960.c9users.io:8081/searchBookByVolumeID/"+$scope.volumeID,//1ebwAAAAMAAJ
+            url : "/searchBookByVolumeID/"+$scope.volumeID,//1ebwAAAAMAAJ
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -70,7 +70,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
         
          $http({
             method : "POST",
-            url : "https://dse305-cto-gn02519960.c9users.io:8081/addToFavouriteList",
+            url : "/addToFavouriteList",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -102,7 +102,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
         
          $http({
             method : "POST",
-            url : "https://dse305-cto-gn02519960.c9users.io:8081/addNotes",
+            url : "/addNotes",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
@@ -129,7 +129,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$location', '$cookieStor
         
          $http({
             method : "POST",
-            url : "https://dse305-cto-gn02519960.c9users.io:8081/getNotes",
+            url : "/getNotes",
             data: passData,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(function mySucces(response) {
