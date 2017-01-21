@@ -24,6 +24,14 @@
 
 
 var app = express();
+
+var env = process.env.NODE_ENV || 'development';
+if ('development' == env) {
+   // configure stuff here
+    app.use(express.static(__dirname + '/'));   
+} else {
+    app.use(express.static(__dirname + '/'));
+}
 //app.set( 'port', process.env.PORT || 3001 );
 
 
@@ -158,8 +166,8 @@ app.server.listen(8082, function () {
 //  console.log( 'Express server listening on port ' + app.get( 'port' ));
 //});
 
-//app.set( 'port', process.env.PORT || 3001 );//for heroku
-app.set( 'port', 8081 || 3001 );
+app.set( 'port', process.env.PORT || 3001 );//for heroku
+//app.set( 'port', 8081 || 3001 );
 http.createServer( app ).listen( app.get( 'port' ), function (){
   console.log( 'Express server listening on port ' + app.get( 'port' ));
 });

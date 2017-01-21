@@ -69,7 +69,12 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
                      }
                     $scope.country = responseData.city.name;
                 }else if(method == 2){
+                    console.log(responseData);
                     $scope.country = responseData.name;
+                    $scope.temp = responseData.main.temp;
+                    $scope.temp_min = responseData.main.temp_min;
+                    $scope.temp_max = responseData.main.temp_max;
+                    $scope.humidity = responseData.main.humidity;
                 }
             }
         }, function myError(response) {
@@ -318,8 +323,13 @@ app.filter('startFrom', function() {
                       </button>
                   </div>
                   <div>
-                      Country : {{country}}
+                      Country : {{country}} <br>
+                      Temp : {{temp}} <br>
+                      Humidity : {{humidity}} <br>
+                      Temp Min : {{temp_min}} <br>
+                      Temp Max : {{temp_max}} <br>
                    </div>
+                   
               </div>
             </div>
              <!-- end tab -->
