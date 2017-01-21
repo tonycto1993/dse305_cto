@@ -94,7 +94,7 @@ app.controller('MyCtrl', ['$scope','$http', '$filter', '$cookieStore', function 
         });
     }
     
-    $scope.removeFavoruite = function(event) {
+    $scope.removeFavoruite = function(name) {
         //$scope.data = [];
         //alert(event.target.id);
         var passData = $.param({
@@ -201,7 +201,7 @@ app.filter('startFrom', function() {
                                     {{item.volumeInfo.publisher}}  {{item.volumeInfo.publishedDate}}
                                 </div>
                                 <div class="right">
-                                    <a class="waves-effect waves-light btn red" ng-model="favourite" value="{{key}}" ng-show="true" target="_blank" id="{{item.id}}" data-ng-click="removeFavoruite($event)">Remove</a>
+                                    <a class="waves-effect waves-light btn red" ng-model="favourite" value="{{key}}" ng-show="true" target="_blank" id="{{vol[key]}}" data-ng-click="removeFavoruite($event)">Remove</a>
                                 </div>
                             </div>
                         </div>
